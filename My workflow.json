@@ -1,0 +1,213 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "triggerAtMinute": 5
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        128
+      ],
+      "id": "201775fb-ea3f-40ee-97fb-fbd17ace0561",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        96,
+        128
+      ],
+      "id": "665e76be-3426-4bf9-829e-5ff0ee849171",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.slice(0,5);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        128
+      ],
+      "id": "ae1de891-9c31-4ea7-b636-8e0c19c7ef69",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        512,
+        128
+      ],
+      "id": "f0f9e4dc-73c9-4dda-b453-94881ecd90ef",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f02b8f8b-7f49-4110-96e9-f30519f7beda",
+              "leftValue": "={{ $json.current_price }}",
+              "rightValue": 50000,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        720,
+        128
+      ],
+      "id": "bc7b241a-0a3e-48e3-8169-d82a3bb98990",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "6661735272",
+        "text": "Hy",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        928,
+        32
+      ],
+      "id": "579bbaf0-ebe0-40c8-b516-310edd1c775f",
+      "name": "Send a text message",
+      "webhookId": "de53f3ea-c1a4-4e8f-806a-80748123e012",
+      "credentials": {
+        "telegramApi": {
+          "id": "CHNaOq9BMtHOEAux",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2026-05-21T00:47:12.676+05:30",
+          "Readable date": "May 21st 2026, 12:47:12 am",
+          "Readable time": "12:47:12 am",
+          "Day of week": "Thursday",
+          "Year": "2026",
+          "Month": "May",
+          "Day of month": "21",
+          "Hour": "00",
+          "Minute": "47",
+          "Second": "12",
+          "Timezone": "Asia/Calcutta (UTC+05:30)"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ba3da62f-fd29-4a7b-b99f-fe9f7983f8ad",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "69b7dcebf0710f1b97c341c13ced1d86c0c7c34b08d278ade131a8487d49dcc3"
+  },
+  "id": "AEFhYGrXkwgzimQj",
+  "tags": []
+}
